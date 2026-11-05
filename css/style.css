@@ -1,0 +1,835 @@
+
+
+/* ----------------------------------------------------------
+   1. CSS VARIABLES (design tokens)
+      Keeping all repeated values here so we only change them
+      in one place instead of hunting through the whole file.
+   ---------------------------------------------------------- */
+:root {
+
+--clr-border: #007C84;
+
+  --clr-primary: #00AFB9;
+
+  --clr-icon: #00AFB9;
+
+  --clr-tag: #00AFB9;
+
+  --clr-on-accent: #102326;
+  --clr-on-tag: #102326;
+  --clr-glow: rgba(0, 175, 185, 0.28);
+
+--bg-page:   #111827;    
+  --bg-card:   #1d2432;    
+  --text:      #ffffff;    
+  --text-muted:#a0aec0;    
+  --bg-header: #1a2235;
+
+--transition: 0.3s ease;
+
+--card-lift: translateY(-6px);
+
+--icon-scale: scale(1.15);
+}
+
+/* ----------------------------------------------------------
+   2. LIGHT THEME OVERRIDE
+      When the hidden #theme-toggle checkbox is checked,
+      :root:has(...) overrides the dark-theme variables.
+   ---------------------------------------------------------- */
+:root:has(#theme-toggle:checked) {
+  --clr-border: #005C62;
+  --clr-primary: #00767D;
+  --clr-icon: #00767D;
+  --clr-tag: #00767D;
+  --clr-on-accent: #ffffff;
+  --clr-on-tag: #ffffff;
+  --bg-page:   #ffffff;
+  --bg-card:   #dbdcdd;
+  --text:      #000000;
+  --text-muted:#4a5568;
+  --bg-header: #f0f0f0;
+
+  --clr-glow: rgba(0, 118, 125, 0.18);
+}
+
+/* ----------------------------------------------------------
+   3. RESET & BASE STYLES
+      Remove browser default margins/padding and set box-sizing
+      so padding doesn't add to element width.
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text);
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  transition: background-color var(--transition), color var(--transition);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ----------------------------------------------------------
+   4. HIDDEN CHECKBOXES (theme toggle + hamburger menu)
+      Both live at the top of <body> so CSS siblings work.
+      We hide them visually but they still function.
+   ---------------------------------------------------------- */
+#theme-toggle,
+#menu-toggle {
+  display: none; 
+}
+
+/* ----------------------------------------------------------
+   5. HEADER
+      Sticky bar at the top; logo on the left, right side
+      has the hamburger (mobile), nav links, and theme toggle.
+   ---------------------------------------------------------- */
+header {
+  position: sticky;          
+  top: 0;
+  z-index: 100;              
+  background-color: var(--bg-header);
+  padding: 0 2rem;
+  height: 65px;
+  display: flex;
+  align-items: center;       
+  justify-content: space-between; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
+  transition: background-color var(--transition);
+}
+
+.logo-link {
+  display: flex;             
+  align-items: center;
+  gap: 0.6rem;               
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;        
+  object-fit: cover;         
+}
+
+.logo-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  white-space: nowrap;       
+}
+
+.logo-accent {
+  color: var(--clr-icon);
+}
+
+/* ----------------------------------------------------------
+   6. RIGHT SIDE OF HEADER
+      Wrapper that holds hamburger label, nav, and theme label.
+   ---------------------------------------------------------- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; 
+}
+
+/* ----------------------------------------------------------
+   7. HAMBURGER MENU LABEL
+      Visible only on mobile. The 3 <span> bars animate into
+      an X when #menu-toggle is checked.
+   ---------------------------------------------------------- */
+.hamburger-label {
+  display: none;             
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 110;              
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  height: 2.5px;
+  background-color: var(--text); 
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+#menu-toggle:checked ~ header .hamburger-label .bar:nth-child(1) {
+  transform: translateY(8.75px) rotate(45deg);
+}
+
+#menu-toggle:checked ~ header .hamburger-label .bar:nth-child(2) {
+  opacity: 0;
+}
+
+#menu-toggle:checked ~ header .hamburger-label .bar:nth-child(3) {
+  transform: translateY(-8.75px) rotate(-45deg);
+}
+
+/* ----------------------------------------------------------
+   8. NAVIGATION LINKS
+      Horizontal row on desktop.
+      On mobile: hidden by default, slides down when
+      #menu-toggle is checked.
+   ---------------------------------------------------------- */
+nav ul {
+  list-style: none;          
+  display: flex;
+  gap: 1.5rem;               
+}
+
+nav a {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: color var(--transition);
+}
+
+nav a:hover {
+  color: var(--clr-primary);
+}
+
+/* ----------------------------------------------------------
+   9. THEME TOGGLE BUTTON
+      The <label> is styled to look like a pill/button.
+      Clicking it checks/unchecks the hidden #theme-toggle.
+   ---------------------------------------------------------- */
+.theme-label {
+  cursor: pointer;
+  background-color: var(--bg-card);
+  color: var(--text);
+  border: 2px solid var(--clr-border); 
+  border-radius: 20px;        
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  user-select: none;          
+  transition: background-color var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.theme-label::before {
+  content: "☀ Light";
+}
+
+#theme-toggle:checked ~ header .theme-label::before {
+  content: "🌙 Dark";
+}
+
+/* ----------------------------------------------------------
+   10. SECTION WRAPPER
+       A reusable layout applied to every <section>.
+   ---------------------------------------------------------- */
+section {
+  padding: 5rem 2rem;        
+  max-width: 1100px;
+  margin: 0 auto;            
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--clr-primary);  
+  margin-bottom: 2.5rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: var(--clr-border);
+  margin: 0.5rem auto 0;      
+  border-radius: 2px;
+}
+
+/* ----------------------------------------------------------
+   11. HERO SECTION
+       Two side-by-side containers: photo | text.
+   ---------------------------------------------------------- */
+#home {
+  min-height: calc(100vh - 65px); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;                       
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.hero-image-container {
+  flex-shrink: 0; 
+}
+
+.hero-photo {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;              
+  border-radius: 50%;             
+  border: 4px solid var(--clr-primary); 
+  box-shadow: 0 0 40px var(--clr-glow); 
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hero-text h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.hero-text h1 span {
+  color: var(--clr-primary);
+}
+
+.hero-sub {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 400px;
+}
+
+.btn-primary {
+  display: inline-block;         
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.9rem;
+  background-color: var(--clr-primary);
+  color: var(--clr-on-accent);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: opacity var(--transition), transform var(--transition);
+  align-self: flex-start;        
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+  transform: var(--card-lift);
+}
+
+/* ----------------------------------------------------------
+   12. ABOUT SECTION
+   ---------------------------------------------------------- */
+#about {
+  background-color: var(--bg-card); 
+  max-width: 100%;                   
+  padding: 5rem 2rem;
+  transition: background-color var(--transition);
+}
+
+#about .about-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.about-text {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 700px;              
+  margin: 0 auto;
+  text-align: center;
+  line-height: 1.9;
+}
+
+/* ----------------------------------------------------------
+   13. SKILLS SECTION
+   ---------------------------------------------------------- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 3rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.skill-item {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.skill-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-weight: 600;
+}
+
+.skill-heading span:last-child {
+  color: var(--clr-primary);
+}
+
+.skill-item progress {
+  width: 100%;
+  height: 0.7rem;
+  overflow: hidden;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--bg-card);
+}
+
+.skill-item progress::-webkit-progress-bar {
+  background-color: var(--bg-card);
+  border-radius: 999px;
+}
+
+.skill-item progress::-webkit-progress-value {
+  background-color: var(--clr-primary);
+  border-radius: 999px;
+}
+
+.skill-item progress::-moz-progress-bar {
+  background-color: var(--clr-primary);
+  border-radius: 999px;
+}
+
+/* ----------------------------------------------------------
+   14. JOURNEY SECTION
+       Three steps displayed in a row on desktop.
+   ---------------------------------------------------------- */
+
+.journey-steps {
+  display: flex;
+  gap: 1.5rem;              
+  flex-wrap: wrap;          
+  justify-content: center;
+}
+
+.step-card {
+  background-color: var(--bg-card);
+  border-left: 4px solid var(--clr-border); 
+  border-radius: 8px;
+  padding: 1.75rem 1.5rem;
+  flex: 1 1 280px;           
+  max-width: 340px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.step-card:hover {
+  transform: var(--card-lift);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.step-number {
+  display: inline-block;
+  background-color: var(--clr-tag);
+  color: var(--clr-on-tag);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+}
+
+.step-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.step-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ----------------------------------------------------------
+   14. PROJECTS SECTION
+       A 3-column grid of cards, responsive.
+   ---------------------------------------------------------- */
+#projects {
+  background-color: var(--bg-card); 
+  max-width: 100%;
+  padding: 5rem 2rem;
+  transition: background-color var(--transition);
+}
+
+#projects .projects-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 1.75rem;
+}
+
+.project-card {
+  background-color: var(--bg-page);
+  border: 2px solid var(--clr-border);  
+  border-radius: 10px;
+  overflow: hidden;                       
+  display: flex;
+  flex-direction: column;                
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.project-card:hover {
+  transform: var(--card-lift);
+  box-shadow: 0 8px 30px var(--clr-glow);
+}
+
+.project-thumb {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;   
+}
+
+.project-info {
+  padding: 1.2rem;
+  flex: 1;             
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-info h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: color var(--transition);
+}
+
+.project-info h3:hover {
+  color: var(--clr-primary);
+}
+
+.project-info p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  flex: 1; 
+}
+
+.project-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.tool-tag {
+  background-color: var(--bg-card);
+  color: var(--clr-tag);         
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid var(--clr-tag); 
+}
+
+/* ----------------------------------------------------------
+   15. CONTACT SECTION
+   ---------------------------------------------------------- */
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.contact-title {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.contact-title::after {
+  margin-left: 0;
+}
+
+.contact-intro {
+  max-width: 32rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+}
+
+.contact-details {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.contact-detail-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  color: var(--clr-icon);
+}
+
+.contact-detail-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.contact-detail-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.contact-detail a:hover {
+  color: var(--clr-primary);
+}
+
+.contact-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.contact-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  align-items: center;
+  transition: border-color var(--transition), transform var(--transition);
+  color: var(--text);
+}
+
+.contact-card:hover {
+  transform: translateY(-3px);
+}
+
+.contact-card:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+}
+
+.contact-icon {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  color: var(--clr-icon);      
+  transition: transform var(--transition); 
+}
+
+.contact-card:hover .contact-icon {
+  transform: var(--icon-scale); 
+}
+
+.contact-form {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+}
+
+.contact-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  color: var(--text);
+  background-color: var(--bg-page);
+  border: 1px solid var(--clr-border);
+  border-radius: 4px;
+  font: inherit;
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}
+
+.contact-submit {
+  justify-self: start;
+  margin-top: 0.35rem;
+  padding: 0.7rem 1.1rem;
+  color: var(--clr-on-accent);
+  background-color: var(--clr-primary);
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.contact-submit:hover {
+  opacity: 0.85;
+  transform: var(--card-lift);
+}
+
+.contact-note {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* ----------------------------------------------------------
+   16. FOOTER
+   ---------------------------------------------------------- */
+footer {
+  background-color: var(--bg-header);
+  text-align: center;
+  padding: 1.5rem 2rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: background-color var(--transition);
+}
+
+/* ----------------------------------------------------------
+   17. RESPONSIVE — TABLET  (max-width: 768px)
+       - Hamburger becomes visible, desktop nav hidden
+       - Mobile nav drops below the header when menu is open
+       - Project grid → 2 columns
+       - Hero → stacks vertically
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+
+.hamburger-label {
+    display: flex; 
+  }
+
+nav {
+    display: none;             
+    position: absolute;        
+    top: 65px;                 
+    left: 0;
+    width: 100%;               
+    background-color: var(--bg-header);
+    padding: 1rem 2rem 1.5rem; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 99;               
+  }
+
+#menu-toggle:checked ~ header nav {
+    display: block;            
+  }
+
+nav ul {
+    flex-direction: column;    
+    gap: 0;
+  }
+
+nav ul li a {
+    display: block;
+    padding: 0.8rem 0;         
+    border-bottom: 1px solid rgba(255,255,255,0.08); 
+    font-size: 1rem;
+  }
+
+#home {
+    flex-direction: column;
+    text-align: center;
+    min-height: auto;
+    padding-top: 3rem;
+    gap: 2rem;
+  }
+
+.btn-primary {
+    align-self: center;
+  }
+
+.hero-desc {
+    max-width: 100%;
+  }
+
+.projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+.hero-photo {
+    width: 230px;
+    height: 230px;
+  }
+
+.hero-text h1 {
+    font-size: 2.4rem;
+  }
+
+.step-card {
+    flex: 1 1 220px;
+  }
+
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------------------------
+   18. RESPONSIVE — MOBILE  (max-width: 480px)
+       - Project grid → 1 column
+      - Contact content → single column
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+
+.projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+.section-title {
+    font-size: 1.6rem;
+  }
+
+.hero-text h1 {
+    font-size: 2rem;
+  }
+
+.step-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+.contact-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
