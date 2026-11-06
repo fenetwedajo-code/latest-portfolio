@@ -269,7 +269,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5rem;                       
+  gap: 5rem;
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 2rem;
@@ -551,7 +551,7 @@ section {
 .contact-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 2.5rem;
+  gap: 2rem;
   align-items: stretch;
 }
 
@@ -795,7 +795,7 @@ nav ul li a {
     text-align: center;
     min-height: auto;
     padding-top: 3rem;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
 .btn-primary {
