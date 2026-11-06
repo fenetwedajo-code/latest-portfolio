@@ -120,15 +120,7 @@ header {
 .logo-link {
   display: flex;             
   align-items: center;
-  gap: 0.6rem;               
   text-decoration: none;
-}
-
-.logo-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;        
-  object-fit: cover;         
 }
 
 .logo-text {
@@ -277,7 +269,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4rem;                       
+  gap: 5rem;                       
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 2rem;
@@ -559,7 +551,7 @@ section {
 .contact-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 2rem;
+  gap: 2.5rem;
   align-items: stretch;
 }
 
